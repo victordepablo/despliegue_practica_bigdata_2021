@@ -424,7 +424,99 @@ airflow scheduler
 
 ![Consola Respuesta Airflow](images/airflow_console.png)
 
+
+## Mejora "Dockerizar cada uno de los servicios que componen la arquitectura completa" - INCOMPLETO
+
+## 0. Instalación de Docker siguiendo la guia "https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository"
+```
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo docker run hello-world
+```
+
+## 1. Instalación de Docker Compose desde la guia "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-es"
+sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+## 2. Implementación de un DockerFile por cada uno de los componentes de la arquitectura.
+Se han implementado cinco Dockerfile correspondientes a los componentes Zookeeper, Kafka, Mongo, Spark y web que contienen todas las herramientas complementarias para su ejecución.
+Las imágenes construidas a partir de los Dockerfile han sido subidas a nuestra cuenta personal en Dockerhub y se puede acceder a ellas a través del siguiente enlace: https://hub.docker.com/u/victordepablo97
+
 ![Página DockerHub](images/dockerhub_page.png)
+
+La descripción de los Dockerfile se encuentra dentro de nuestro repositorio "despliegue_practica_bigdata_2021" en la ruta "resources/Dockerizar_pruebas"
+
+## 3. Compilar Dockerfile, arrancar contenedores a partir de las imágenes creadas y pruebas.
+Se abre un nuevo terminal
+```
+cd Desktop/practica_prediccion_vuelos/practica_big_data_2019/resources/Dockerizar_pruebas/
+```
+
+### 3.1. Zookeeper
+```
+cd Zookeeper
+sudo docker build -t victordepablo97/zookeeper:3.7 .
+sudo docker run -d --name zoo1 -p 2600:2600 victordepablo97/zookeeper:3.7 bash -c 'yum install -y httpd && apachectl -D FOREGROUND'
+sudo docker exec -it a47a /bin/bash
+bin/zkServer.sh start /usr/bin/java
+```
+
+### 3.2. Kafka
+Se arrancaran tres contenedores de la misma imagen para arrancar kafka, crear un productor y un consumidor
+```
+cd ..
+cd kafka
+chmod 755 start.sh
+sudo docker build . -t kafka:3.0.0
+sudo docker run -d --name kafka-broker kafka:3.0.0
+sudo docker run --rm -it --link kafka-broker --name temp kafka:3.0.0 bin/kafka-topics.sh --create --bootstrap-server kafka-broker:9092 --replication-factor 1 --partitions 1 --topic flight_delay_classification_request
+sudo docker run --rm -it --link kafka-broker --name producer kafka:3.0.0 bin/kafka-console-producer.sh --bootstrap-server kafka-broker:9092 --topic flight_delay_classification_request
+```
+
+Abrir un nuevo terminal
+```
+sudo docker run --rm -it --link kafka-broker --name consumer kafka:3.0.0 bin/kafka-console-consumer.sh --bootstrap-server kafka-broker:9092 --topic flight_delay_classification_request --from-beginning
+```
+
+### 3.3. Mongo
+```
+cd ..
+cd Mongo
+sudo docker build -t victordepablo97/mongo:4.2 .
+sudo docker run -d -p 27017:27017 --name=database mongo:4.2
+sudo docker start mongo:4.2
+sudo docker exec -it database bash
+```
+
+### 3.4. Spark
+```
+cd ..
+cd Spark
+sudo docker build -t victordepablo97/spark:3.1.2 .
+sudo docker run -d --name spark -p 7077:7077 victordepablo97/spark:3.1.2
+```
+
+### DA FALLO AL EJECUTAR EL ÚLTIMO PASO DEL DOCKERFILE (SPARK-SUBMIT)
+
+### 3.5. Web
+```
+cd ..
+cd Web
+Abrir un nuevo terminal
+sudo docker build -t victordepablo97/web .
+sudo docker run -d --name web victordepablo97/web
+```
+
 
 
 
