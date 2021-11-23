@@ -372,6 +372,17 @@ Control+Shift+J
 
 # MEJORAS
 
+## Mejora "Desplegar el escenario completo en Google Cloud"
+## Se ha creado una instancia de la VM ubuntu 20.04 en Google Cloud con interfaz gráfica. 
+Para ello se ha seguido la guía: `https://youtu.be/OyxwQQArHdM`
+
+### Primer paso. Se ha creado el escenario completo desplegando el predictor de vuelos con spark-submit como se ha hecho previamente con una máquina virtual ubuntu 20.04 en VirtualBox.
+
+### Segundo Paso. Se ha probado el escenario completo entrenando el modelo con Apache Airflow.
+
+### Tercer Paso. Se ha intentado desplegar el predictor de retraso de vuelos a través de contenedores Docker no teniendo éxito. El contenedor de Spark falla al ejecutar el comando que corre el spark-submit. 
+
+
 ## Mejora "TRAIN THE MODEL WITH APACHE AIRFLOW"
 ## 0. Arrancar Zookeeper, Kafka, un productor, un consumidor y mongo como en la parte obligatoria de la práctica
 
@@ -427,7 +438,10 @@ airflow scheduler
 
 ## Mejora "Dockerizar cada uno de los servicios que componen la arquitectura completa" - INCOMPLETO
 
-## 0. Instalación de Docker siguiendo la guia "https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository"
+## 0. Instalación de Docker
+La instalación se ha llevado a cabo siguiendo la guía: 
+`https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository`
+
 ```
 sudo apt-get remove docker docker-engine docker.io containerd runc
 sudo apt-get update
@@ -445,16 +459,21 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io
 sudo docker run hello-world
 ```
 
-## 1. Instalación de Docker Compose desde la guia "https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-es"
+## 1. Instalación de Docker Compose
+
+La instalación se ha llevado a cabo siguiendo la guía: `https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-es`
+
+```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
 
 ## 2. Implementación de un DockerFile por cada uno de los componentes de la arquitectura.
 Se han implementado cinco Dockerfile correspondientes a los componentes Zookeeper, Kafka, Mongo, Spark y web que contienen todas las herramientas complementarias para su ejecución.
-Las imágenes construidas a partir de los Dockerfile han sido subidas a nuestra cuenta personal en Dockerhub y se puede acceder a ellas a través del siguiente enlace: https://hub.docker.com/u/victordepablo97
+Las imágenes construidas a partir de los Dockerfile han sido subidas a nuestra cuenta personal en Dockerhub y se puede acceder a ellas a través del siguiente enlace: `https://hub.docker.com/u/victordepablo97`
 
 ![Página DockerHub](images/dockerhub_page.png)
 
-La descripción de los Dockerfile se encuentra dentro de nuestro repositorio "despliegue_practica_bigdata_2021" en la ruta "resources/Dockerizar_pruebas"
+La descripción de los Dockerfile se encuentra dentro de nuestro repositorio: `despliegue_practica_bigdata_2021` en la ruta `resources/Dockerizar_pruebas`
 
 ## 3. Compilar Dockerfile, arrancar contenedores a partir de las imágenes creadas y pruebas.
 Se abre un nuevo terminal
@@ -462,7 +481,7 @@ Se abre un nuevo terminal
 cd Desktop/practica_prediccion_vuelos/practica_big_data_2019/resources/Dockerizar_pruebas/
 ```
 
-### 3.1. Zookeeper
+### 3.1 Zookeeper
 ```
 cd Zookeeper
 sudo docker build -t victordepablo97/zookeeper:3.7 .
@@ -471,8 +490,8 @@ sudo docker exec -it a47a /bin/bash
 bin/zkServer.sh start /usr/bin/java
 ```
 
-### 3.2. Kafka
-Se arrancaran tres contenedores de la misma imagen para arrancar kafka, crear un productor y un consumidor
+### 3.2 Kafka
+Se ejecutan 3 contenedores de la misma imagen para arrancar kafka, crear un productor y crear un consumidor
 ```
 cd ..
 cd kafka
@@ -488,7 +507,7 @@ Abrir un nuevo terminal
 sudo docker run --rm -it --link kafka-broker --name consumer kafka:3.0.0 bin/kafka-console-consumer.sh --bootstrap-server kafka-broker:9092 --topic flight_delay_classification_request --from-beginning
 ```
 
-### 3.3. Mongo
+### 3.3 Mongo
 ```
 cd ..
 cd Mongo
@@ -498,7 +517,7 @@ sudo docker start mongo:4.2
 sudo docker exec -it database bash
 ```
 
-### 3.4. Spark
+### 3.4 Spark
 ```
 cd ..
 cd Spark
@@ -508,7 +527,7 @@ sudo docker run -d --name spark -p 7077:7077 victordepablo97/spark:3.1.2
 
 ### DA FALLO AL EJECUTAR EL ÚLTIMO PASO DEL DOCKERFILE (SPARK-SUBMIT)
 
-### 3.5. Web
+### 3.5 Web
 ```
 cd ..
 cd Web
@@ -517,6 +536,77 @@ sudo docker build -t victordepablo97/web .
 sudo docker run -d --name web victordepablo97/web
 ```
 
+## 4. Puede ser que se construyan imágenes y contenedores que se desean parar y eliminar por no coincidir las versiones o haber escrito erróneamente el comando build o run. Algunas soluciones pueden ser:
+
+Ver imagenes docker creadas
+```
+sudo docker images
+```
+
+Ver contenedores docker inactivos
+```
+sudo docker ps -a
+```
+
+Ver contenedores docker activos
+```
+sudo docker ps
+```
+
+Parar un contenedor
+```
+sudo docker stop "PRIMEROS DIGITOS DEL IDENTICADOR DEL CONTENEDOR"
+```
+
+Eliminar todos los contenedores inactivos
+```
+sudo su
+sudo docker rm $(docker ps -a -q)
+```
+Para salir del modo superusuario: `Ctrl + D`
+
+
+Borrar una imagen
+```
+sudo docker rmi "USUARIO_DOCKER/NOMBRE_IMAGEN:ETIQUETA"
+```
+
+Borrar todas las imagenes
+```
+sudo su
+sudo docker rm $(docker images)
+```
+Para salir del modo superusuario: `Ctrl + D`
+
+## 5. Subir las imágenes Docker creadas a Dockerhub
+### 5.1 Iniciar sesión en Dockerhub por linea de comandos
+```
+sudo docker login
+```
+
+### 5.2 Preparar la imagen para que sea aceptada en este registro publico
+```
+sudo docker tag NOMBRE_IMAGEN USUARIO_DOCKER/NOMBRE_IMAGEN:ETIQUETA
+```
+
+### 5.3 Usar comando push para subir la imagen
+```
+sudo docker push USUARIO_DOCKER/NOMBRE_IMAGEN:ETIQUETA
+```
+
+### 5.4 Subida de las imágenes que dockerizan los servicios implementados en la arquitectura para desplegar el predictor de vuelos
+```
+sudo docker tag victordepablo97/zookeeper:3.7 victordepablo97/zookeeper:3.7
+sudo docker push victordepablo97/zookeeper:3.7
+sudo docker tag victordepablo97/kafka:3.0.0 victordepablo97/kafka:3.0.0
+sudo docker push victordepablo97/kafka:3.0.0
+sudo docker tag victordepablo97/mongo:4.2 victordepablo97/mongo:4.2
+sudo docker push victordepablo97/mongo:4.2
+sudo docker tag victordepablo97/spark:3.1.2 victordepablo97/spark3.1.2
+sudo docker push victordepablo97/spark3.1.2
+sudo docker tag victordepablo97/web victordepablo97/web
+sudo docker push victordepablo97/web
+```
 
 
 
