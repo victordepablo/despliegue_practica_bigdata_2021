@@ -290,6 +290,10 @@ python3.7 predict_flask.py
 
 `http://localhost:5000/flights/delays/predict_kafka`
 
+![Resultado Prediccion](images/final_result.png)
+
+![Consumidor Prediccion](images/consumer.png)
+
 Control+Shift+J
 
 
@@ -415,6 +419,14 @@ airflow webserver --port 8080
 #Accedemos a la interfaz gráfica de Apache Airflow http://localhost:8080/home
 airflow scheduler
 ```
+
+![Navegador Resultado Airflow](images/airflow_navigator_dag.png)
+
+![Consola Respuesta Airflow](images/airflow_console.png)
+
+![Página DockerHub](images/dockerhub_page.png)
+
+
 
 
 
