@@ -1,13 +1,13 @@
 # DESPLIEGUE PRÁCTICA PREDICCIÓN DE VUELOS BIG DATA
 
-# Autores: Mario Esperalta Delgado y Victor de Pablo Gozalo. Versión Ubuntu 20.04
+# Autores: Mario Esperalta Delgado y Víctor de Pablo Gozalo. Versión Ubuntu 20.04
 
-## 0. Configurar entorno Ubuntu y clonar repositorio de GitHub
+## 0. Configurar entorno Ubuntu y clonar repositorio GitHub inicial.
 ```
 sudo apt-get update
 ```
 
-### 0.1 Instalar varios terminales de comandos por si falla el terminal que viene por defecto en Ubuntu.
+### 0.1 Instalar varios terminales de comandos por si falla el terminal por defecto
 ```
 sudo apt-get install xterm
 sudo apt-get install terminator -y
@@ -18,14 +18,14 @@ sudo apt-get install lilyterm
 sudo apt-get install sakura
 ```
 
-### 0.2 Instalar y configurar git para clonar proyecto de GitHub
+### 0.2 Instalar y configurar git para clonar repositorio GitHub.
 ```
 sudo apt install git
 sudo git config --global user.name "NOMBRE DE USUARIO GITHUB"
 sudo git config --global user.email "CORREO CUENTA GITHUB"
 ```
 
-Para ver que se ha guardado correctamente -> "sudo git config --list"
+Para ver que se ha guardado correctamente: `sudo git config --list`
 
 ```
 cd Desktop
@@ -55,18 +55,18 @@ sudo apt install curl
 sudo apt install openjdk-8-jdk -y
 ```
 
-Asegurarse que las versiones de Java y Javac son la 1.8 con java -version y javac -version
+Asegurarse que las versiones de Java y Javac son la 1.8 con: `java -version` y `javac -version`
 
 ### 1.3 Instalación Python 3.7 y pip asociado a esa versión de python
 ```
 sudo apt install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa # Pulsar enter
+sudo add-apt-repository ppa:deadsnakes/ppa #Pulsar enter
 sudo apt install python3.7 -y
 sudo apt-get install python3-pip -y
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
 ```
 
-Chequear versiones con "python3.7 --version" y "pip --version"
+Chequear versiones con: `python3.7 --version` y `pip --version`
 
 ### 1.4 Instalación de sbt
 ```
@@ -76,7 +76,7 @@ curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89
 sudo apt-get install sbt
 ```
 
-Chequear versiones con el comando "sbt -version". En este caso, se trabaja con la version 1.5.5
+Chequear versiones con el comando: `sbt -version`. En este caso, se trabaja con la version 1.5.5
 
 ### 1.5 Instalación de MongoDB 4.2 version Community
 ```
@@ -90,9 +90,9 @@ echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
 echo "mongodb-org-tools hold" | sudo dpkg --set-selections
 ```
 
-Chequear versiones con el comando "mongod --version". En este caso, se trabaja con la version 4.2.17
+Chequear versiones con el comando: `mongod --version`. En este caso, se trabaja con la version 4.2.17
 
-Comprobar el sistema init que la plataforma mongo usa con el comando "ps --no-headers -o comm 1". El sistema usa "systemd" (se empleará más adelante para arrancar mongo)
+Comprobar el sistema init que la plataforma mongo usa con el comando: `ps --no-headers -o comm 1`. El sistema usa "systemd" (se empleará más adelante para arrancar mongo)
 
 ### 1.6 Instalación de Spark 3.1.2
 ```
@@ -114,7 +114,7 @@ source "/home/NOMBRE_USUARIO_UBUNTU/.sdkman/bin/sdkman-init.sh"
 sdk install scala 2.12.1
 ```
 
-Chequear versiones con el comando "scala -version". 
+Chequear versiones con el comando `scala -version`. 
 
 ### 1.8 Instalación de Zookeeper 3.7.0
 ```
@@ -130,7 +130,7 @@ tar -xvf kafka_2.12-3.0.0.tgz
 rm kafka_2.12-3.0.0.tgz
 ```
 
-### 1.10 Instalación de librerías Python necesarias del proyecto
+### 1.10 Instalación de librerías Python necesarias para el proyecto
 ```
 cd practica_big_data_2019/
 pip install -r requirements.txt
@@ -144,8 +144,7 @@ sudo apt update
 ```
 
 ### 2.1 Arrancar Zookeeper
-Abrir un nuevo terminal
-Moverse al escritorio de Kafka
+Abrir un nuevo terminal y moverse al escritorio de Kafka
 ```
 cd Desktop/practica_prediccion_vuelos/kafka_2.12-3.0.0/
 sudo bin/zookeeper-server-start.sh config/zookeeper.properties
@@ -170,9 +169,11 @@ cd Desktop/practica_prediccion_vuelos/kafka_2.12-3.0.0/
       --topic flight_delay_classification_request
 ```
 
-Aparece el siguiente mensaje por pantalla "Created topic flight_delay_classification_request."
-Para ver la lista de topics creados "bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"
-Devuelve como salida el nombre del único topic creado: "flight_delay_classification_request"
+Aparece el siguiente mensaje por pantalla: `Created topic flight_delay_classification_request.`
+
+Para ver la lista de topics creados: `bin/kafka-topics.sh --bootstrap-server localhost:9092 --list`
+
+Devuelve como salida el nombre del único topic creado: `flight_delay_classification_request`
 
 Abrir un nuevo terminal y, en el mismo directorio kafka, crear un nuevo consumidor
 ```
@@ -188,12 +189,11 @@ Abrir un nuevo terminal
 ```
 sudo systemctl start mongod
 ```
-Para ver que está activo "sudo systemctl status mongod". Salir con Ctrl+C.
-Para parar Mongo "sudo systemctl stop mongod"
+Para ver que está activo: `sudo systemctl status mongod`. Salir con Ctrl+C.
+Para parar Mongo: `sudo systemctl stop mongod`
 
 ### 2.4 Arrancar Spark
-Abrir un nuevo terminal
-Comprobar directorio de ubicación de java con "ls /usr/lib/jvm/java*"
+Abrir un nuevo terminal y comprobar directorio de ubicación de java con: `ls /usr/lib/jvm/java*`
 ```
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 cd Desktop/practica_prediccion_vuelos/practica_big_data_2019/
@@ -213,7 +213,7 @@ sudo ./resources/import_distances.sh
 ```
 python3.7 resources/train_spark_mllib_model.py .
 ```
-Deben de aparecer varios ficheros en ../models.
+Deben de aparecer varios ficheros en `../models`
 
 ## 5. Ejecutar el predictor de vuelos
 ```
@@ -269,9 +269,9 @@ cp -r numeric_vector_assembler.bin/ /Users/admin/IdeaProjects/ging/practica_big_
 cp -r spark_random_forest_classifier.flight_delays.5.0.bin/ /Users/admin/IdeaProjects/ging/practica_big_data_2019/models/spark_random_forest_classifier.flight_delays.5.0.bin
 ```
 
-Presionar las teclas "Ctrl+D" para salir del modo root
-Hay que volver al terminal donde se han copiado los modelos, verificando que se han copiado, y se sale del modo root
-Hay que volver al terminal donde previamente se ejecutó spark-submit, sin tener exito, y volver a correr el comando
+Presionar las teclas `Ctrl+D` para salir del modo root.
+Hay que volver al terminal donde se han copiado los modelos, verificando que se han copiado, y se sale del modo root.
+Posteriormente, hay que volver al terminal donde previamente se ejecutó spark-submit, sin tener exito, y volver a correr el comando
 ```
 /opt/spark/bin/spark-submit --class es.upm.dit.ging.predictor.MakePrediction --packages org.mongodb.spark:mongo-spark-connector_2.12:3.0.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /home/NOMBRE_USUARIO_UBUNTU/Desktop/practica_prediccion_vuelos/practica_big_data_2019/flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar
 ```
@@ -286,26 +286,25 @@ cd web
 python3.7 predict_flask.py
 ```
 
-## 7 Abrir firefox
+## 7. Abrir firefox
 
-http://localhost:5000/flights/delays/predict_kafka
+`http://localhost:5000/flights/delays/predict_kafka`
+
 Control+Shift+J
 
 
 
-# En sucesivas ocasiones que se quiera probar el predictor de vuelos con la máquina virtual ubuntu reciñen arrancada, solo es necesario la ejecución de los siguientes comandos:
+# En sucesivas ocasiones que se quiera probar el predictor de vuelos con la máquina virtual ubuntu recién arrancada, sólo es necesaria la ejecución de los siguientes comandos:
 
 ## 0. Arrancar Zookeeper
-Abrir un nuevo terminal
-Moverse al escritorio de Kafka
+Abrir un nuevo terminal y moverse al escritorio de Kafka
 ```
 cd Desktop/practica_prediccion_vuelos/kafka_2.12-3.0.0/
 sudo bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
 
 ## 1. Arrancar Kafka
-Abrir un nueva terminal
-Moverse al directorio Kafka
+Abrir un nueva terminal y moverse al directorio Kafka
 ```
 cd Desktop/practica_prediccion_vuelos/kafka_2.12-3.0.0/
 sudo bin/kafka-server-start.sh config/server.properties
@@ -337,7 +336,7 @@ Abrir un nuevo terminal
 sudo systemctl start mongod
 ```
 
-Para ver que está activo "sudo systemctl status mongod". Salir con Ctrl+C.
+Para ver que está activo: `sudo systemctl status mongod`. Salir con `Ctrl+C`
 
 ## 3 Arrancar Spark
 Abrir un nuevo terminal
@@ -351,7 +350,7 @@ sudo ./start-master.sh
 /opt/spark/bin/spark-submit --class es.upm.dit.ging.predictor.MakePrediction --packages org.mongodb.spark:mongo-spark-connector_2.12:3.0.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /home/NOMBRE_USUARIO_UBUNTU/Desktop/practica_prediccion_vuelos/practica_big_data_2019/flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar
 ```
 
-## 5. Arrancar aplicacion web para peticion de prediccion de vuelos
+## 5. Arrancar aplicacion web para petición de prediccion de vuelos
 Abrir un nuevo terminal
 ```
 cd Desktop/practica_prediccion_vuelos/practica_big_data_2019/
@@ -361,9 +360,10 @@ cd web
 python3.7 predict_flask.py
 ```
 
-## 7 Abrimos firefox
+## 6. Abrimos firefox
 
-http://localhost:5000/flights/delays/predict_kafka
+`http://localhost:5000/flights/delays/predict_kafka`
+
 Control+Shift+J
 
 # MEJORAS
