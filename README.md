@@ -2,7 +2,7 @@
 
 # Autores: Mario Esperalta Delgado y Víctor de Pablo Gozalo. Versión Ubuntu 20.04
 
-## 0. Configurar entorno Ubuntu y clonar repositorio GitHub inicial.
+## 0. Configurar entorno Ubuntu y clonar repositorio GitHub inicial
 ```
 sudo apt-get update
 ```
@@ -18,7 +18,7 @@ sudo apt-get install lilyterm
 sudo apt-get install sakura
 ```
 
-### 0.2 Instalar y configurar git para clonar repositorio GitHub.
+### 0.2 Instalar y configurar git para clonar repositorio GitHub
 ```
 sudo apt install git
 sudo git config --global user.name "NOMBRE DE USUARIO GITHUB"
@@ -151,8 +151,7 @@ sudo bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
 
 ### 2.2 Arrancar Kafka
-Abrir un nueva terminal
-Moverse al directorio Kafka
+Abrir un nueva terminal y moverse al directorio Kafka
 ```
 cd Desktop/practica_prediccion_vuelos/kafka_2.12-3.0.0/
 sudo bin/kafka-server-start.sh config/server.properties
@@ -171,9 +170,7 @@ cd Desktop/practica_prediccion_vuelos/kafka_2.12-3.0.0/
 
 Aparece el siguiente mensaje por pantalla: `Created topic flight_delay_classification_request.`
 
-Para ver la lista de topics creados: `bin/kafka-topics.sh --bootstrap-server localhost:9092 --list`
-
-Devuelve como salida el nombre del único topic creado: `flight_delay_classification_request`
+Para ver la lista de topics creados: `bin/kafka-topics.sh --bootstrap-server localhost:9092 --list`. Devuelve como salida el nombre del único topic creado: `flight_delay_classification_request`
 
 Abrir un nuevo terminal y, en el mismo directorio kafka, crear un nuevo consumidor
 ```
