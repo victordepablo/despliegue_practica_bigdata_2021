@@ -379,6 +379,10 @@ Para ello se ha seguido la guía: `https://youtu.be/OyxwQQArHdM`
 
 ### Tercer Paso. Se ha intentado desplegar el predictor de retraso de vuelos a través de contenedores Docker no teniendo éxito. El contenedor de Spark falla al ejecutar el comando que corre el spark-submit. 
 
+### Cuarto Paso. Se ha configurado la instancia de Google Cloud para que la aplicación de predicción de vuelos, una vez lanzada, pueda ser accesible desde el exterior mediante la IP pública de la instancia. 
+Para ello se ha tenido que configurar una nueva regla de firewall dentro de Google Cloud.
+
+![Acceso Exterior](images/public_access.png)
 
 ## Mejora "TRAIN THE MODEL WITH APACHE AIRFLOW"
 ## 0. Arrancar Zookeeper, Kafka, un productor, un consumidor y mongo como en la parte obligatoria de la práctica
@@ -423,14 +427,17 @@ cp ~/Desktop/practica_prediccion_vuelos/practica_big_data_2019/resources/airflow
 
 ## 5. Arracar airflow scheduler y webserver
 ```
-airflow webserver --port 8080
-#Accedemos a la interfaz gráfica de Apache Airflow http://localhost:8080/home
 airflow scheduler
+airflow webserver --port 8080
 ```
 
-![Navegador Resultado Airflow](images/airflow_navigator_dag.png)
+Acceder a la interfaz gráfica de Apache Airflow `http://localhost:8080/home`
 
-![Consola Respuesta Airflow](images/airflow_console.png)
+NOTA: Si el comando `airflow webserver --port 8080` se ha realizado en otro terminal distinto al `airflow scheduler`, es necesario ejecutar primero los 3 export anteriores.
+
+![Airflow Corriendo](images/airflow_running.png)
+
+![Airflow Éxito](images/airflow_success.png)
 
 
 ## Mejora "Dockerizar cada uno de los servicios que componen la arquitectura completa" - INCOMPLETO
